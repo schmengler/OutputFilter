@@ -1,0 +1,8 @@
+1.0.1
+
+- Added missing support for float types (configurable with
+OutputFilterWrapper::setDoubleFilterBehaviour())
+- Added OutputFilterWrapperChain::prependWrapper()
+
+1.0.0
+initial release

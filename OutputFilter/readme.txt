@@ -4,6 +4,7 @@
 
 - Synopsis
 - Requirements
+- Version
 - Files
 - Simple Usage
 - Extended Usage: Wrapper Constraints
@@ -33,6 +34,11 @@ package (http://www.phpclasses.org/package/6021).
 
 To use the package, just include outputfilter.lib.php (also edit that file to
 include the Typesafe Enum package properly).
+
+
+Version
+-------
+This file refers to OutputFilter 1.0.1. See changelog.txt for details.
 
 
 Files
@@ -156,6 +162,7 @@ following methods of OutputFilterWrapper:
 
 setStringFilterBehaviour($behaviour)
 setIntFilterBehaviour($behaviour)
+setDoubleFilterBehaviour($behaviour)
 setBoolFilterBehaviour($behaviour)
 setNullFilterBehaviour($behaviour)
 
@@ -212,6 +219,8 @@ OutputFilterWrapperChain class:
 	// ...
 
 This is especially useful for the framework integrations (see next section).
+Instead of adding wrappers at the end of the chain with pushWrapper() it is
+also possible to add them at the beginning with appendWrapper().
 
 
 Extended Usage: Integrations
