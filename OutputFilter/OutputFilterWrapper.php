@@ -52,6 +52,11 @@ class OutputFilterWrapper implements OutputFilterWrapperInterface
 	 * @var OutputFilterWrapperBehaviour
 	 */
 	private $intFilterBehaviour;
+
+	/**
+	 * @var OutputFilterWrapperBehaviour
+	 */
+	private $doubleFilterBehaviour;
 	
 	/**
 	 * @var OutputFilterWrapperBehaviour
@@ -81,6 +86,7 @@ class OutputFilterWrapper implements OutputFilterWrapperInterface
 			->setConstraints($constraints)
 			->setStringFilterBehaviour(OutputFilterWrapperBehaviour::WRAP())
 			->setIntFilterBehaviour(OutputFilterWrapperBehaviour::NONE())
+			->setDoubleFilterBehaviour(OutputFilterWrapperBehaviour::NONE())
 			->setBoolFilterBehaviour(OutputFilterWrapperBehaviour::NONE())
 			->setNullFilterBehaviour(OutputFilterWrapperBehaviour::NONE());
 	}
@@ -153,6 +159,22 @@ class OutputFilterWrapper implements OutputFilterWrapperInterface
 	/**
 	 * @return OutputFilterWrapperBehaviour
 	 */
+	public function getDoubleFilterBehaviour() {
+		return $this->doubleFilterBehaviour;
+	}
+
+	/**
+	 * @param OutputFilterWrapperBehaviour
+	 * @return OutputFilterWrapper
+	 */
+	public function setDoubleFilterBehaviour(OutputFilterWrapperBehaviour $doubleFilterBehaviour) {
+		$this->doubleFilterBehaviour = $doubleFilterBehaviour;
+		return $this;
+	}
+
+	/**
+	 * @return OutputFilterWrapperBehaviour
+	 */
 	public function getBoolFilterBehaviour() {
 		return $this->boolFilterBehaviour;
 	}
@@ -217,6 +239,7 @@ class OutputFilterWrapper implements OutputFilterWrapperInterface
 			'NULL'    => $this->nullFilterBehaviour,
 			'string'  => $this->stringFilterBehaviour,
 			'integer' => $this->intFilterBehaviour,
+			'double'  => $this->doubleFilterBehaviour,
 			'boolean' => $this->boolFilterBehaviour,
 			'resource' => OutputFilterWrapperBehaviour::NONE(),
 		);

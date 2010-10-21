@@ -14,6 +14,11 @@ class OutputFilterWrapperChain implements OutputFilterWrapperInterface
 		array_push($this->wrappers, $wrapper);
 		return $this;
 	}
+	public function prependWrapper(OutputFilterWrapperInterface $wrapper)
+	{
+		array_unshift($this->wrappers, $wrapper);
+		return $this;
+	}
 	/**
 	 * @param mixed $subject
 	 */ 
