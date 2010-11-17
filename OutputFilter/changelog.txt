@@ -1,3 +1,9 @@
+1.0.2
+- Fixed wrapper behaviour for Traversable objects, especially in combination
+with ArrayAccess.
+  -> renamed FilteredIterator to FilteredTraversable
+  -> added FilteredTraversableArrayObject
+
 1.0.1
 
 - Added missing support for float types (configurable with

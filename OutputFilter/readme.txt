@@ -52,10 +52,11 @@ OutputFilterWrapperConstraints - class file: filter contraints
 OutputFilterWrapperBehaviour - class file: filter behaviour on scalars
 OutputFilterWrapperChain - class file: class for nested wrappers
 FilteredAbstract.php - class file: abstract class for filtered variables
-FilteredIterator.php - class file: abstract class for filtered iterators
+FilteredTraversable.php - class file: class for filtered iterators
 FilteredObject.php - class file: class for filtered objects
 FilteredArray.php - class file: class for filtered arrays
 FilteredArrayObject.php - class file: class for filtered objects with ArrayAccess
+FilteredTraversableArrayObject.php - class file: class for filtered traversable objects with ArrayAccess
 FilteredScalar.php - class file: class for filtered scalars
 example/filter.example.php - executable example
 example/data.example.php - data for filter.example.php
