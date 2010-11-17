@@ -1,9 +1,9 @@
 <?php
-class FilteredArray extends FilteredTraversable implements ArrayAccess
+class FilteredTraversableArrayObject extends FilteredArrayObject implements ArrayAccess, IteratorAggregate
 {
 	protected function checkType($base)
 	{
-		return is_array($base);
+		return $base instanceof ArrayAccess && $base instanceof Traversable;
 	}
 	public function offsetExists($offset)
 	{
@@ -19,23 +19,15 @@ class FilteredArray extends FilteredTraversable implements ArrayAccess
 	}
 	public function offsetSet($offset, $value)
 	{
-		if ($offset === null) {
-			$this->base[] = $value;
-		} else {
-			$this->base[$offset] = $value;
-		}
+		$this->base[$offset] = $value;
 	}
 	public function offsetUnset($offset)
 	{
 		unset($this->base[$offset]);
 	}
-	
-	public function toArray()
+
+	public function getIterator()
 	{
-		$array = array();
-		foreach(array_keys($this->base) as $key) {
-			$array[$key] = $this[$key];
-		}
-		return $array;
+		return new FilteredTraversable($this->wrapper, $this->base);
 	}
 }

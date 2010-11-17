@@ -1,6 +1,14 @@
 <?php
-abstract class FilteredIterator extends FilteredAbstract implements Iterator
+class FilteredTraversable extends FilteredAbstract implements Iterator
 {
+	/**
+	 * @param unknown_type $base
+	 */
+	protected function checkType($base)
+	{
+		return $base instanceof Traversable;
+	}
+
 	public function current()
 	{
 		$current = current($this->base);
@@ -26,5 +34,5 @@ abstract class FilteredIterator extends FilteredAbstract implements Iterator
 	{
 		return current($this->base)!==false;
 	}
-	
+
 }
