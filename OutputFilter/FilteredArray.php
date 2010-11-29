@@ -1,6 +1,10 @@
 <?php
-class FilteredArray extends FilteredTraversable implements ArrayAccess
+class FilteredArray extends FilteredTraversable implements ArrayAccess, Countable
 {
+	protected function makeIterator()
+	{
+		$this->iterator = new ArrayIterator($this->base);
+	}
 	protected function checkType($base)
 	{
 		return is_array($base);
@@ -38,4 +42,12 @@ class FilteredArray extends FilteredTraversable implements ArrayAccess
 		}
 		return $array;
 	}
+	/**
+	 * 
+	 */
+	public function count()
+	{
+		return count($this->base);
+	}
+
 }

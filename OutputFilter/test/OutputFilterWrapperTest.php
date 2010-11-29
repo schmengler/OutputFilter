@@ -1,9 +1,9 @@
 <?php
 
-require_once 'IO/Filters/OutputFilter/outputfilter.lib.php';
-require_once 'IO/Filters/OutputFilter/Filters/HtmlEntitiesFilter.php';
-require_once 'IO/Filters/OutputFilter/Filters/Nl2BrFilter.php';
-require_once 'IO/Filters/OutputFilter/Filters/NullFilter.php';
+require_once 'SGH-lib\OutputFilter/outputfilter.lib.php';
+require_once 'SGH-lib\OutputFilter/Filters/HtmlEntitiesFilter.php';
+require_once 'SGH-lib\OutputFilter/Filters/Nl2BrFilter.php';
+require_once 'SGH-lib\OutputFilter/Filters/NullFilter.php';
 
 require_once 'PHPUnit/Framework/TestCase.php';
 
@@ -29,6 +29,10 @@ class OutputFilterWrapperTest extends PHPUnit_Framework_TestCase {
 	 */
 	private $testObject;
 	/**
+	 * @var array
+	 */
+	private $testArray, $test2DArray, $test3DArray, $testAssocArray;
+	/**
 	 * Prepares the environment before running a test.
 	 */
 	protected function setUp() {
@@ -38,6 +42,10 @@ class OutputFilterWrapperTest extends PHPUnit_Framework_TestCase {
 		$this->testObject = new stdClass();
 		$this->testObject->foo = $this->testString;
 		$this->testObject->bar = $this->testString;
+		$this->testArray = array($this->testString, $this->testString);
+		$this->test2DArray = array($this->testArray, $this->testArray);
+		$this->test3DArray = array($this->test2DArray, $this->test2DArray);
+		$this->testAssocArray = array('foo'=>$this->testString, 'bar'=>$this->testString);
 		parent::setUp ();
 	}
 	
@@ -205,16 +213,100 @@ class OutputFilterWrapperTest extends PHPUnit_Framework_TestCase {
 		$wrapped[0] = $this->testString;
 		$this->assertSame($this->filter->filter($this->testString), (string)$wrapped[0]);
 	}
+	
+	/**
+	 * Tests Countable interface
+	 */
+	public function testCountArray() {
+		$wrapped = $this->makeFiltered($this->testArray);
+		$this->assertSame(2, count($wrapped));
+	}
 
 	/**
 	 * Tests Iterator Interface
 	 */
 	public function testIterateArray() {
-		$testArray = array($this->testString, $this->testString);
-		$wrapped = $this->makeFiltered($testArray);
-		//list($key,$item) = each($wrapped);
-		foreach($wrapped as $item)
+		$wrapped = $this->makeFiltered($this->testArray);
+		$count = 0;
+		foreach($wrapped as $item) {
 			$this->assertSame($this->filter->filter($this->testString), (string)$item);
+			++$count;
+		}
+		$this->assertSame(2, $count);
+	}
+	
+	public function testIterator() {
+		$testIterator = new IteratorIterator(new ArrayIterator($this->testArray));
+		$wrapped = $this->makeFiltered($testIterator);
+		$count = 0;
+		foreach($wrapped as $item) {
+			$this->assertSame($this->filter->filter($this->testString), (string)$item);
+			++$count;
+		}
+		$this->assertSame(2, $count);
+	}
+	
+	public function testDoubleFilterIterator() {
+		$testIterator = new IteratorIterator(new ArrayIterator($this->testArray));
+		$wrapped = $this->makeFiltered($this->makeFiltered($testIterator));
+		$count = 0;
+		foreach($wrapped as $item) {
+			$this->assertSame($this->filter->filter($this->filter->filter($this->testString)), (string)$item);
+			++$count;
+		}
+		$this->assertSame(2, $count);		
+	}
+	
+	public function testTwoDimensionalArray() {
+		$wrapped = $this->makeFiltered($this->test2DArray);
+		$count = 0;
+		foreach($wrapped as $column) {
+			$this->assertSame(2, count($column));
+			$count2 = 0;
+			foreach($column as $item) {
+				$this->assertSame($this->filter->filter($this->testString), (string)$item);
+				++$count2;
+			}
+			$this->assertSame(2, $count2);
+			++$count;
+		}
+		$this->assertSame(2, $count);		
+	}
+	public function testThreeDimensionalArray() {
+		$wrapped = $this->makeFiltered($this->test3DArray);
+		$count = 0;
+		$this->assertType('FilteredArray', $wrapped);
+		foreach($wrapped as $k => $column) {
+			$this->assertType('FilteredArray', $column);
+			$this->assertSame(2, count($column));
+			$count2 = 0;
+			foreach($column as $l => $group) {
+				$this->assertType('FilteredArray', $group);
+				$this->assertSame(2, count($group));
+				$count3 = 0;
+				foreach($group as $m => $item) {
+					$this->assertSame($this->filter->filter($this->testString), (string)$item);
+					++$count3;
+				}
+				$this->assertSame(2, $count3);
+				++$count2;
+			}
+			$this->assertSame(2, $count2);
+			++$count;
+		}
+		$this->assertSame(2, $count);		
+	}
+	public function testIterateAssocArray() {
+		$wrapped = $this->makeFiltered($this->testAssocArray);
+		$count = 0;
+		$this->assertType('FilteredArray', $wrapped);
+		reset($this->testAssocArray);
+		foreach($wrapped as $k => $item) {
+			$this->assertSame(key($this->testAssocArray), $k);
+			$this->assertSame($this->filter->filter($this->testString), (string)$item);
+			++$count; next($this->testAssocArray);
+		}
+		$this->assertSame(2, $count);
 	}
 	
 	/**
@@ -225,4 +317,3 @@ class OutputFilterWrapperTest extends PHPUnit_Framework_TestCase {
 		$this->assertSame($this->filter->filter($this->testString), (string)$wrapped);
 	}
 }
-

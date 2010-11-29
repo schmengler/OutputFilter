@@ -32,6 +32,9 @@ abstract class FilteredAbstract
 	
 	public function unfiltered()
 	{
+		if ($this->base instanceof FilteredAbstract) {
+			return $this->base->unfiltered();
+		}
 		return $this->base;
 	}
 	

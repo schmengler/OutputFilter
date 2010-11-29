@@ -1,8 +1,13 @@
+1.0.3
+- made unfiltered() recursive to work better with chained wrappers
+- fixed FilteredTraversable for IteratorAggregate objects
+- fixed bug with chained wrappers and Traversables
+- numeric arrays and iterators with numeric keys are no longer affected by ARRAY_KEY constraints
+- ...
+
 1.0.2
 - Fixed wrapper behaviour for Traversable objects, especially in combination
 with ArrayAccess.
-  -> renamed FilteredIterator to FilteredTraversable
-  -> added FilteredTraversableArrayObject
 
 1.0.1
 

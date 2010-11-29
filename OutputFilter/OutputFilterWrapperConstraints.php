@@ -13,7 +13,7 @@ class OutputFilterWrapperConstraints
 	/**
 	 * @var string
 	 */
-	const NONE = '/[^.]/';
+	const NONE = '/^$/';
 	const PROPERTY = 1;
 	const METHOD = 2;
 	const ARRAY_KEY = 4;

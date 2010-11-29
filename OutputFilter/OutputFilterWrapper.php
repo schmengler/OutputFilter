@@ -230,7 +230,7 @@ class OutputFilterWrapper implements OutputFilterWrapperInterface
 		} elseif ($value instanceof ArrayAccess) {
 			return new FilteredArrayObject($this, $value);
 		} elseif ($value instanceof Traversable) {
-			return new FilteredTraversable($this, $value);
+			return new FilteredTraversableObject($this, $value);
 		} elseif (is_object($value)) {
 			return new FilteredObject($this, $value);
 		} else {

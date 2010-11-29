@@ -1,33 +1,34 @@
 <?php
-class FilteredTraversableArrayObject extends FilteredArrayObject implements ArrayAccess, IteratorAggregate
+/**
+ * also Countable, important for wrapping FilteredArrayObject (multiwrap arrays) 
+ * 
+ * @author fs
+ *
+ */
+class FilteredTraversableArrayObject extends FilteredArrayObject implements ArrayAccess, IteratorAggregate, Countable
 {
 	protected function checkType($base)
 	{
 		return $base instanceof ArrayAccess && $base instanceof Traversable;
-	}
-	public function offsetExists($offset)
-	{
-		return isset($this->base[$offset]);
-	}
-	public function offsetGet($offset)
-	{
-		return $this->wrapper->filterRecursive(
-			$this->base[$offset],
-			OutputFilterWrapperConstraints::ARRAY_KEY,
-			$offset
-		);
-	}
-	public function offsetSet($offset, $value)
-	{
-		$this->base[$offset] = $value;
-	}
-	public function offsetUnset($offset)
-	{
-		unset($this->base[$offset]);
 	}
 
 	public function getIterator()
 	{
 		return new FilteredTraversable($this->wrapper, $this->base);
 	}
+	/**
+	 * 
+	 */
+	public function count()
+	{
+		if ($this->base instanceof Countable) {
+			return count($this->base);
+		}
+		$count = 0;
+		foreach($this->base as $dummy) {
+			++$count;
+		}
+		return $count;
+	}
+
 }

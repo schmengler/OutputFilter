@@ -1,6 +1,6 @@
 <?php
 
-require_once 'IO\Filters\OutputFilter\OutputFilterWrapperConstraints.php';
+require_once 'OutputFilter\OutputFilterWrapperConstraints.php';
 
 require_once 'PHPUnit\Framework\TestCase.php';
 

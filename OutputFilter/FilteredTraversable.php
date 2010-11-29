@@ -2,37 +2,70 @@
 class FilteredTraversable extends FilteredAbstract implements Iterator
 {
 	/**
+	 * To make current(), key() etc. also work with IteratorAggregate, the
+	 * actual iterator must be handled separately from $base 
+	 * 
+	 * @var Iterator
+	 */
+	protected $iterator;
+	
+	/**
+	 * @param mixed $base
+	 */
+	public function __construct(OutputFilterWrapper $wrapper, $base)
+	{
+		parent::__construct($wrapper, $base);
+		$this->makeIterator();
+	}
+	
+	protected function makeIterator()
+	{
+		$this->iterator = $this->base;
+		while ($this->iterator instanceof IteratorAggregate) {
+			$this->iterator = $this->iterator->getIterator();
+		}
+	}
+	
+	/**
 	 * @param unknown_type $base
 	 */
 	protected function checkType($base)
 	{
-		return $base instanceof Traversable;
+		return is_array($base) || $base instanceof Traversable;
 	}
 
 	public function current()
 	{
-		$current = current($this->base);
-		return $current===false ? false : $this->wrapper->filterRecursive(
+		$current = $this->iterator->current();
+		if ($current===false) {
+			return false;
+		}
+		// numeric keys should not be constrained!
+		$key = $this->iterator->key();
+		if (is_numeric($key)) {
+			return $this->wrapper->filterRecursive($current);
+		}
+		return $this->wrapper->filterRecursive(
 			$current,
 			OutputFilterWrapperConstraints::ARRAY_KEY,
-			key($this->base)
+			$key
 		);
 	}
 	public function key()
 	{
-		return key($this->base);
+		return $this->iterator->key();
 	}
 	public function next()
 	{
-		next($this->base);
+		$this->iterator->next();
 	}
 	public function rewind()
 	{
-		reset($this->base);
+		$this->iterator->rewind();
 	}
 	public function valid()
 	{
-		return current($this->base)!==false;
+		return $this->iterator->valid();
 	}
 
 }

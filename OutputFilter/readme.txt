@@ -213,13 +213,16 @@ If you want to use the same nesting repeatedly, you can do it easily with the
 OutputFilterWrapperChain class:
 
 	$nestedWrapper = new OutputFilterWrapperChain;
-	$nestedWrapper->pushWrapper($bbCodeWrapper)
-		->pushWrapper($standardWrapper);
+	$nestedWrapper->pushWrapper($standardWrapper)
+		->pushWrapper($bbCodeWrapper);
 
 	$nestedWrapper->wrap($vars);
 	// ...
 
-This is especially useful for the framework integrations (see next section).
+Note that the order of pushed wrappers is exactly the order we want the filters
+to be called this time.
+
+The chain is especially useful for the framework integrations (see next section).
 Instead of adding wrappers at the end of the chain with pushWrapper() it is
 also possible to add them at the beginning with appendWrapper().
 
